@@ -1,0 +1,11 @@
+4bda52b4410dd7e185403e340cbb1224 *DESCRIPTION
+a190bf6718818628bce45e76ec96c01f *NAMESPACE
+2edb6e7c8337f3addb70e4aa86d39d12 *R/Blend.R
+3620df5ff07af8a2fab548cd9705c25c *R/Plot.Blend.R
+565c3ce1c8b209c0e8a36c3257b00d43 *data/DataCD.rda
+813371452004137123385fe9fa41ba33 *data/DataNAT.rda
+8d7d6fef1b77b9d93895ba35afe62dc2 *man/Blend.Rd
+666c648a8045c88b8f326d058358ac9b *man/Blendstat-package.Rd
+4c9b3f965a623f2933c702341e057697 *man/DataCD.Rd
+dd9cdfb19eae3ed05f442f511cad567c *man/DataNAT.Rd
+3a01bbc5a89cdd3ae6bb79fb85f119b4 *man/Plot.Blend.Rd
