@@ -23,7 +23,7 @@ Dados <- DataCD
 
 Exp <- Dados[,2]   # identification of experiments
 
-X   <- Dados[,3:5] # independent variable
+X   <- Dados[,3:6] # independent variable
 Y   <- Dados[,11]  # dependent variable 
  
 # effects of the blends in a reference mixture 

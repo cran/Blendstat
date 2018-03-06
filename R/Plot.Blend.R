@@ -1,4 +1,5 @@
-Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRUE) {
+Plot.Blend <- function(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA, 
+                       ylabel = NA, BoxLeg = FALSE, Color = TRUE) {
   
   # Rotina para plotar graficos de Blendstate,
   # Desenvolvida por Marcelo Angelo Cirillo e
@@ -6,28 +7,34 @@ Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRU
   
   # Entrada:
   # BL       - Dados da funcao Blend.
-  # Title    - Titulos para o grafico dos efeitos das concentracoes. Se nao for definido assume texto padrao.
+  # Titles   - Titulos para o grafico dos efeitos das concentracoes e componentes. Se nao for definido assume texto padrao.
   # PosLeg   - 1 para legenda a esquerda,
   #            2 para legenda a direita (default),
   #            3 para legenda acima,
   #            4 para legenda abaixo.
+  # xlabel	 - Nomeia o eixo X, se nao definido retorna padrao.
+  # ylabel	 - Nomeia o eixo Y, se nao definido retorna padrao.
   # BoxLeg   - Colocar moldura na legenda (default = TRUE).
   # Color    - Graficos coloridos (default = TRUE).
-  
-  # BL=Res; Title = NULL; PosLeg = 2; BoxLeg = FALSE; Color = TRUE
-  
+
   # Retorna:
   # Varios graficos.
   
   if (!is.numeric(PosLeg) || PosLeg < 1 || PosLeg > 4 || (floor(PosLeg)-PosLeg) != 0)
-    stop("Input to set the position of the legend 'PosLeg' is incorrect, must be an integer number between [1,4]. Check!")
+     stop("Input to set the position of the legend 'PosLeg' is incorrect, must be an integer number between [1,4]. Check!")
   
   if (!is.logical(BoxLeg)) 
-    stop("Input to insert the frame of the legend 'BoxLeg' is incorrect, must be TRUE or FALSE. Check!")
+     stop("Input to insert the frame of the legend 'BoxLeg' is incorrect, must be TRUE or FALSE. Check!")
   
   if (!is.logical(Color))
-    stop("Input for 'Color' is incorrect, must be TRUE or FALSE. Check!")
+     stop("Input for 'Color' is incorrect, must be TRUE or FALSE. Check!")
 
+  if (is.na(xlabel) || !is.character(xlabel))
+     xlabel = "Effects"  # Nomeia Eixo X  
+  
+  if (is.na(ylabel) || !is.character(ylabel))
+     ylabel = "Predicted values"  # Nomeia Eixo Y
+  
   ##### INICIO - Informacoes usadas nos Graficos #####
   BoxLeg = ifelse(BoxLeg,"o","n") # moldura nas legendas, "n" sem moldura, "o" com moldura
   
@@ -38,8 +45,9 @@ Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRU
   cor <- 1 # cor inicial dos pontos e legendas
   ##### FIM - Informacoes usadas nos Graficos #####
   
-  if (!is.character(Title[1]) || is.na(Title[1])) Title[1] = c("Study of the effects of concentrations")
- 
+  if (!is.character(Titles[1]) || is.na(Titles[1])) Titles[1] = c("Study of the effects of concentrations")
+  if (!is.character(Titles[2]) || is.na(Titles[2])) Titles[2] = c("Component")
+  
   Init.Form <- 15 # formato inicial dos pontos
   
   Form.Points <- Init.Form:(Init.Form + Num.Exp-1)
@@ -56,10 +64,12 @@ Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRU
   
   Concentration <- BL$MPred[,3]
   
+  dev.new() # nova tela para o grafico
+  
   plt <- xyplot(BL$MPred[,4] ~ BL$MPred[,2] | Concentration,
-         xlab  = "Effects",
-         ylab  = "Predicted values",
-         main  = Title[1],
+         xlab  = xlabel,
+         ylab  = ylabel,
+         main  = Titles[1],
          data  = BL$MPred, # dados
          group = BL$MPred[,1], # grupos dos experimentos 
          type  = "b", # tipo de grafico
@@ -90,13 +100,15 @@ Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRU
   # windows(width = 5, height = 5, pointsize = 1)
 
   nc <- (ncol(Data)-2) # numero de variaveis regressoras
-
+  
+  dev.new() # nova tela para o grafico
+  
   for(i in 1:nc) { # variaveis regressoras
- 
+    
     plt <- xyplot(Data[, 2 + i] ~ Data[,2],
-           xlab  = "Effects",
-           ylab  = "Predicted values",
-           main  = paste("Component", Tit[i]),
+           xlab  = xlabel,
+           ylab  = ylabel,
+           main  = paste(Titles[2], Tit[i]),
            data  = Data, # dados
            group = Data[,1], # grupos dos experimentos
            type  = "b", # tipo de grafico
@@ -114,8 +126,10 @@ Plot.Blend <- function(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRU
     num <- i/2
     if ((ceiling(num) - num) != 0) { # se for impar
         print(plt, split=c(1,1,1,2), more = ifelse(i < nc, TRUE, FALSE)) 
-    } else print(plt, split=c(1,2,1,2), more = FALSE)
-
+    } else {
+      print(plt, split=c(1,2,1,2), more = FALSE)
+      if (i < nc) dev.new() # nova tela para o grafico
+    }
   }
   #### FIM - Preditos por componentes ####
 }

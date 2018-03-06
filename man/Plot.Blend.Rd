@@ -6,15 +6,18 @@
 
 \description{Trace plot of the experiments as a function of the components.}
 
-\usage{Plot.Blend(BL, Title = NULL, PosLeg = 2, BoxLeg = FALSE, Color = TRUE)}
+\usage{Plot.Blend(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA, 
+           ylabel = NA, BoxLeg = FALSE, Color = TRUE)}
  
 \arguments{
   \item{BL}{Function data Blend.}
-  \item{Title}{Title for the graph of the effects of concentrations. If not set, assume the default text.}
+  \item{Titles}{Titles for the graph of the effects of concentrations and components. If not set, assume the default text.}
   \item{PosLeg}{1 - caption left,\cr
                 2 - caption right (default),\cr
                 3 - caption above,\cr
                 4 - caption below.}
+  \item{xlabel}{Label axis X. If not set, assume the default text.}
+  \item{ylabel}{Label axis Y. If not set, assume the default text.}
   \item{BoxLeg}{Place frame in legend (default = FALSE).}
   \item{Color}{Colorful graphics (default = TRUE)}
 
@@ -38,7 +41,7 @@ Dados <- DataCD
 
 Exp <- Dados[,2]   # identification of experiments
 
-X   <- Dados[,3:5] # independent variable
+X   <- Dados[,3:6] # independent variable
 Y   <- Dados[,11]  # dependent variable 
 
 # effects of the blends in a reference mixture 
@@ -53,8 +56,13 @@ print("Values predicted by the components:"); Res$MCPred
 print("Design matrix:"); Res$MExp
 print("Estimates of linear model parameters:"); Res$Theta 
 
-Tit <- c("Covariate (process variable)")
-Plot.Blend(Res, Title = Tit, PosLeg = 2, BoxLeg = TRUE, Color = TRUE)
+Tit <- c("Covariate (process variable)","Variable")
+
+Xlab = "Effects"  # label axis X  
+Ylab = "Predicted values"  # label axis Y
+
+Plot.Blend(Res, Titles = Tit, PosLeg = 2, xlabel = Xlab,
+           ylabel = Ylab, BoxLeg = TRUE, Color = TRUE)
 
 }
 

@@ -3,4 +3,4 @@ importFrom("stats", "cov")
 importFrom("lattice", "xyplot")
 importFrom("MASS", "ginv")
 
-
+importFrom("grDevices", "dev.new")

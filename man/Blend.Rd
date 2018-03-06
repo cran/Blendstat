@@ -42,7 +42,7 @@ Dados <- DataCD
 
 Exp <- Dados[,2]   # identification of experiments
 
-X   <- Dados[,3:5] # independent variable
+X   <- Dados[,3:6] # independent variable
 Y   <- Dados[,11]  # dependent variable 
  
 # effects of the blends in a reference mixture 
@@ -57,8 +57,13 @@ print("Values predicted by the components:"); Res$MCPred
 print("Design matrix:"); Res$MExp
 print("Estimates of linear model parameters:"); Res$Theta 
 
-Tit <- c("Covariate (process variable)")
-Plot.Blend(Res, Title = Tit, PosLeg = 2, BoxLeg = TRUE, Color = TRUE)
+Tit <- c("Covariate (process variable)","Variable")
+
+Xlab = "Effects"  # label axis X  
+Ylab = "Predicted values"  # label axis Y
+
+Plot.Blend(Res, Titles = Tit, PosLeg = 2, xlabel = Xlab,
+           ylabel = Ylab, BoxLeg = TRUE, Color = TRUE)
 
 }
 

@@ -18,16 +18,26 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   # MPrection - Matriz com os valores preditos e observados.
   # MCPred    - Matriz com os valores preditos por componentes.
   # MExp      - Matriz dos experimentos.
-  # Theta     - Vetor com as estimativas de Theta.  
-
+  # Theta     - Vetor com as estimativas de Theta. 
+  
+  X   <- as.data.frame(X)
+  Y   <- as.data.frame(Y)
+  Exp <- as.data.frame(Exp)
+  
+  if (nrow(Exp) != nrow(X))
+     stop("Number of lines in 'Exp' should be equal to 'X'. Check!")
+  
+  if (nrow(Y) != nrow(X))
+     stop("Number of lines in 'Y' should be equal to 'X'. Check!")
+  
   if (nrow(X) != length(Conc) && !is.null(Conc))
      stop("Number of lines in 'Conc' should be equal to 'X'. Check!")
-
-  if (nrow(X) != length(Effects) && !is.null(Conc))
+  
+  if (nrow(X) != length(Effects) && !is.null(Effects))
      stop("Number of lines in 'Effects' should be equal to 'X'. Check!")
   
   if (is.null(Effects))
-      Effects <- rep(1, nrow(X))
+     Effects <- rep(1, nrow(X))
   
   if (is.null(Conc))
      Conc <- rep(1, nrow(X))
@@ -36,12 +46,12 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   Exp.Names <- names(Exp.Table)  # nomes dos experimentos
   Num.Exp   <- length(Exp.Table) # numero de experimentos
 
-  Xc <- cbind(Exp, as.data.frame(X), Conc)
+  if ((sum(Exp.Table) / Num.Exp) != Exp.Table[[1]])
+     stop("The experiments must be balanced. Check!")
   
-  # if (!is.null(Conc))
-  #    Xc <- cbind(Xc, Conc) # acrescenta nomes dos experimentos a variavel X
-
-  Y <- cbind(Exp, as.data.frame(Y)) # acrescenta nomes dos experimentos a variavel Y
+  Xc <- cbind(Exp, X, Conc)
+  
+  Y  <- cbind(Exp, Y) # acrescenta nomes dos experimentos a variavel Y
   
   ## Calculo da matris Z
   MZ <- NULL # matriz Z
@@ -72,7 +82,6 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   }
   MS <- as.data.frame(MS)
   
- 
   ## Calculo da matriz inversa e encontra as covariancias em Z
   MInv <- NULL # Matriz inversa
   MSt  <- NULL # Matriz com as covariancias de Z
@@ -95,7 +104,6 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   MSt  <- as.data.frame(MSt)
   MInv <- as.data.frame(MInv)
   
-  
   ## Calculo dos valores de theta
   MTheta <- NULL # Matriz com valores de theta
   VTheta <- NULL # Matriz com valores de theta
@@ -117,11 +125,12 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   }
   MTheta <- as.data.frame(MTheta)
 
+  
   ## Calculo dos valores de sigma
   MSigma <- NULL # Matriz com valores de sigma
-  n      <- Exp.Table[[1]] # numero de observacoes em cada experimento
+  n      <- Exp.Table[[1]] # numero de elementos em cada experimento
   p      <- ncol(X) + 1 # numero de variaveis regressoras + concentracao
-  q      <- 1 # numero de variaveis estocasticas em cada experimento
+  q      <- 1 # numero de variaveis estocasticas
   nct    <- ncol(MTheta)
   for(i in 1:Num.Exp) {
     
@@ -129,11 +138,11 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
     MaS  <- as.matrix(MS[MS[,1] == Exp.Names[i], 2:ncs])  # matriz S de cada experimento
     MaTh <- as.matrix(MTheta[MTheta[,1] == Exp.Names[i], 2:nct]) # matriz theta de cada experimento
     
-    Ma <- (MaY - MaS%*%MaTh) 
+    Ma      <- (MaY - MaS%*%MaTh) 
     
-    MaSigma <- cbind(Exp.Names[i], as.data.frame((t(Ma) %*% Ma)/(n-p-q)))
+    MaSigma <- cbind(Exp.Names[i], as.data.frame((t(Ma) %*% Ma) / (n - p - q)))
     
-    MSigma <- rbind(MSigma, MaSigma)
+    MSigma  <- rbind(MSigma, MaSigma)
     
   }
   MSigma <- as.data.frame(MSigma)
@@ -155,8 +164,12 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   
   dvs <- svd(dif)
   
-  MDelta <- as.matrix(diag(dvs$d))
- 
+  if (length(dvs$d) > 1) {
+     MDelta <- diag(dvs$d)
+  } else {
+     MDelta <- dvs$d
+  }
+  
   ## Calculo da matris V
   MV   <- NULL # matriz V
   t    <- NULL
@@ -168,8 +181,10 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
     V <- MaZ %*% MDelta %*% t(MaZ) + MSigma[i,2] * diag(1, n)
     
     for(j in 1:Num.Exp) {
+      
       if (j == i) { aux = V }
       else aux = auxV
+      
       t <- cbind(t, aux)
     }
 
@@ -219,8 +234,8 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   MCPred <- as.data.frame(MCPred)
 
   ## Matriz de experimentos
-  MExp <- MZ[,2:ncol(MZ)]
-  colnames(MExp) <- paste("Exp.",1:ncol(MExp))
+  MExp <- as.matrix(MZ[,2:ncol(MZ)])
+  colnames(MExp) <- paste("Exp.", 1:ncol(MExp))
   
   Lista <- list(MPred = MPred, MCPred = MCPred, Theta = EstTheta, MExp = MExp)
 
