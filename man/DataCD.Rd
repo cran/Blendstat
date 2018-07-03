@@ -10,33 +10,31 @@
 
 \usage{data(DataCD)}
 
-\format{Database formed by variables: Exp (identification of experiments); CEB (specialty Arabica Genotype Yellow Bourbon); CT (Commercial coffee) ; CC (Canephora coffee); CEA (specialty Arabica Genotype Acaia); Conc (Concentration: 7\% m/v and 10\% in 35 g/500 ml) concentrations were used in the experiments wet Process Coffee. Dependent variables defined by sensory attributes: Body, Flavour, Acidity, Bitterness, Score.}
+\format{Database of coffee blends of different varieties processed via wet (peeled cherry). Formed by the variables: Exp (code of the experiments); CEB (specialty Bourbon Yellow coffee produced at an altitude above 1,200m); CT (roasted commercial coffee); CC (Conillon coffee); CEA (Acaia specialty coffee produced at altitude below 1,100m); Conc (concentrations at 7\% and 10\% (m/v) of roasted and ground coffee beans in 100 ml of water). Response variables defined by the sensorial attributes: Body, Taste, Acidity, Bitterness, Score.}
 
 \references{
-CNPq for their aid via grant number 304974/2015-3.
+Project yield and research  entitled  by "Quality of blends of specialty and non-specialty coffees of the region of the Mantiqueira Mountains - treatment of discrepant scores in tests with consumers". CNPq for their aid via grant number 304974/2015-3.
 }
 
 \examples{
-data(DataCD) # dataset  
+data(DataCD) # dataset
 
-Dados <- DataCD
+Exp <- DataCD[,2]   # identification of the experiments
 
-Exp <- Dados[,2]   # identification of experiments
-
-X   <- Dados[,3:6] # independent variable
-Y   <- Dados[,11]  # dependent variable 
+X   <- DataCD[,3:6] # independent variables (components)
+Y   <- DataCD[,11]  # dependent variable (response Bitterness)
  
-# effects of the blends in a reference mixture 
+# effects o the mixtures in the reference mixture
 Effects <- rep(c(-0.1,0,0.1,0.2,0.3,0.4,0.5,0.6,0.7),4) 
 
-Conc <- as.matrix(Dados[,7]) # covariate (process variable)
+Conc <- as.matrix(DataCD[,7]) # covariable (process variable)
 
 Res <- Blend(Exp = Exp, X = X, Y = Y, Conc = Conc, Effects = Effects)
 
-print("Predicted values:"); Res$MPred
-print("Values predicted by the components:"); Res$MCPred
-print("Design matrix:"); Res$MExp
-print("Estimates of linear model parameters:"); Res$Theta 
+print("Predicted and observed values"); Res$MPred
+print("Values predicted by components:"); Res$MCPred
+print("Design of the experiments:"); Res$MExp
+print("Estimates of the linear model parameters:"); Res$Theta 
 
 }
 

@@ -1,39 +1,50 @@
 Plot.Blend <- function(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA, 
-                       ylabel = NA, BoxLeg = FALSE, Color = TRUE) {
+                       ylabel = NA, BoxLeg = FALSE, Color = TRUE, 
+                       Casc = TRUE) {
   
   # Rotina para plotar graficos de Blendstate,
   # Desenvolvida por Marcelo Angelo Cirillo e
   # Paulo Cesar Ossani em 11/2017 
   
   # Entrada:
-  # BL       - Dados da funcao Blend.
-  # Titles   - Titulos para o grafico dos efeitos das concentracoes e componentes. Se nao for definido assume texto padrao.
-  # PosLeg   - 1 para legenda a esquerda,
-  #            2 para legenda a direita (default),
-  #            3 para legenda acima,
-  #            4 para legenda abaixo.
-  # xlabel	 - Nomeia o eixo X, se nao definido retorna padrao.
-  # ylabel	 - Nomeia o eixo Y, se nao definido retorna padrao.
-  # BoxLeg   - Colocar moldura na legenda (default = TRUE).
-  # Color    - Graficos coloridos (default = TRUE).
+  # BL     - Dados da funcao Blend.
+  # Titles - Titulos para o grafico dos efeitos das concentracoes e componentes. Se nao for definido assume texto padrao.
+  # PosLeg - 1 para legenda a esquerda,
+  #          2 para legenda a direita (default),
+  #          3 para legenda acima,
+  #          4 para legenda abaixo.
+  # xlabel - Nomeia o eixo X, se nao definido retorna padrao.
+  # ylabel - Nomeia o eixo Y, se nao definido retorna padrao.
+  # BoxLeg - Coloca moldura na legenda (default = TRUE).
+  # Color  - Graficos coloridos (default = TRUE).
+  # Casc   - Efeito cascata na apresentacao dos graficos (default = TRUE).
 
   # Retorna:
   # Varios graficos.
   
   if (!is.numeric(PosLeg) || PosLeg < 1 || PosLeg > 4 || (floor(PosLeg)-PosLeg) != 0)
-     stop("Input to set the position of the legend 'PosLeg' is incorrect, must be an integer number between [1,4]. Check!")
+     stop("Input to set the position of the legend 'PosLeg' is incorrect, should be an integer number between [1,4]. Verify!")
   
   if (!is.logical(BoxLeg)) 
-     stop("Input to insert the frame of the legend 'BoxLeg' is incorrect, must be TRUE or FALSE. Check!")
+     stop("'BoxLeg' input is incorrect, it should be TRUE or FALSE. Verify!")
   
-  if (!is.logical(Color))
-     stop("Input for 'Color' is incorrect, must be TRUE or FALSE. Check!")
-
-  if (is.na(xlabel) || !is.character(xlabel))
+  if (!is.character(xlabel) && !is.na(xlabel))
+     stop("'xlabel' input is incorrect, it should be of type character or string. Verify!")
+  
+  if (!is.character(ylabel) && !is.na(ylabel))
+     stop("'ylabel' input is incorrect, it should be of type character or string. Verify!")
+  
+  if (is.na(xlabel)) # || !is.character(xlabel))
      xlabel = "Effects"  # Nomeia Eixo X  
   
-  if (is.na(ylabel) || !is.character(ylabel))
+  if (is.na(ylabel)) # || !is.character(ylabel))
      ylabel = "Predicted values"  # Nomeia Eixo Y
+  
+  if (!is.logical(Color))
+     stop("'Color' input is incorrect, it should be TRUE or FALSE. Verify!")
+  
+  if (!is.logical(Casc))
+     stop("'Casc' input is incorrect, it should be TRUE or FALSE. Verify!")
   
   ##### INICIO - Informacoes usadas nos Graficos #####
   BoxLeg = ifelse(BoxLeg,"o","n") # moldura nas legendas, "n" sem moldura, "o" com moldura
@@ -64,7 +75,7 @@ Plot.Blend <- function(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA,
   
   Concentration <- BL$MPred[,3]
   
-  dev.new() # nova tela para o grafico
+  if (Casc) dev.new() # efeito cascata na apresentacao dos graficos
   
   plt <- xyplot(BL$MPred[,4] ~ BL$MPred[,2] | Concentration,
          xlab  = xlabel,
@@ -101,7 +112,7 @@ Plot.Blend <- function(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA,
 
   nc <- (ncol(Data)-2) # numero de variaveis regressoras
   
-  dev.new() # nova tela para o grafico
+  if (Casc) dev.new() # efeito cascata na apresentacao dos graficos
   
   for(i in 1:nc) { # variaveis regressoras
     
@@ -127,8 +138,8 @@ Plot.Blend <- function(BL, Titles = c(NA,NA), PosLeg = 2, xlabel = NA,
     if ((ceiling(num) - num) != 0) { # se for impar
         print(plt, split=c(1,1,1,2), more = ifelse(i < nc, TRUE, FALSE)) 
     } else {
-      print(plt, split=c(1,2,1,2), more = FALSE)
-      if (i < nc) dev.new() # nova tela para o grafico
+        print(plt, split=c(1,2,1,2), more = FALSE)
+        if (i < nc) if (Casc) dev.new() # efeito cascata na apresentacao dos graficos
     }
   }
   #### FIM - Preditos por componentes ####

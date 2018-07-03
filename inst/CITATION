@@ -1,0 +1,18 @@
+## -*- R -*-
+citHeader("To cite the R package 'Blendstat' in publications use:")
+
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("Blendstat")
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry	= "Manual",
+	 title	= "Joint analysis of experiments with mixtures and random effects",
+	 author = personList(as.person("Marcelo Angelo Cirillo"),
+                       as.person("Paulo Cesar Ossani")),
+	 year = year,
+	 note = paste(vers),
+         url = "https://CRAN.R-project.org/package=Blendstat",
+	 textVersion = paste(
+	 "Cirillo, M. A., Ossani, P. C. (",
+         year, ").  Blendstat: Joint analysis of experiments with mixtures and random effects.",
+	 vers, ".", sep=""))

@@ -10,31 +10,31 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   # Entrada:
   # Exp - Vetor com os nomes dos experimentos.
   # X - Variaveis regressoras, sem o vetor das concentracoes.
-  # Y - Variavel respota.
+  # Y - Variavel resposta.
   # Conc - Vetor com as concentracoes dos experimentos.
-  # Effects - Vetor com os efeitos dos experimentos.
+  # Effects - Vetor dos efeitos das misturas em uma mistura de referencia (exemplo: centroide)
   
   # Retorna:
-  # MPrection - Matriz com os valores preditos e observados.
-  # MCPred    - Matriz com os valores preditos por componentes.
-  # MExp      - Matriz dos experimentos.
-  # Theta     - Vetor com as estimativas de Theta. 
-  
+  # MPred  - Matriz com os valores preditos e observados.
+  # MCPred - Matriz com os valores preditos por componentes.
+  # MExp   - Matriz com o Design das Experiencias
+  # Theta  - Vetor com as estimativas de Theta. 
+ 
   X   <- as.data.frame(X)
   Y   <- as.data.frame(Y)
   Exp <- as.data.frame(Exp)
   
   if (nrow(Exp) != nrow(X))
-     stop("Number of lines in 'Exp' should be equal to 'X'. Check!")
+     stop("Number of lines in 'Exp' should be equal to 'X'. Verify!")
   
   if (nrow(Y) != nrow(X))
-     stop("Number of lines in 'Y' should be equal to 'X'. Check!")
+     stop("Number of lines in 'Y' should be equal to 'X'. Verify!")
   
   if (nrow(X) != length(Conc) && !is.null(Conc))
-     stop("Number of lines in 'Conc' should be equal to 'X'. Check!")
+     stop("Number of lines in 'Conc' should be equal to 'X'. Verify!")
   
   if (nrow(X) != length(Effects) && !is.null(Effects))
-     stop("Number of lines in 'Effects' should be equal to 'X'. Check!")
+     stop("Number of lines in 'Effects' should be equal to 'X'. Verify!")
   
   if (is.null(Effects))
      Effects <- rep(1, nrow(X))
@@ -47,7 +47,7 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
   Num.Exp   <- length(Exp.Table) # numero de experimentos
 
   if ((sum(Exp.Table) / Num.Exp) != Exp.Table[[1]])
-     stop("The experiments must be balanced. Check!")
+     stop("The experiments should be balanced. Verify!")
   
   Xc <- cbind(Exp, X, Conc)
   
@@ -77,7 +77,7 @@ Blend <- function(Exp, X, Y, Conc = NULL, Effects = NULL) {
     
     MaS <- cbind(Exp.Names[i], as.data.frame(t(rbind(t(MaX),t(MaZ)))))
     
-    MS <- rbind(MS, MaS)
+    MS  <- rbind(MS, MaS)
     
   }
   MS <- as.data.frame(MS)
