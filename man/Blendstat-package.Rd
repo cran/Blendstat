@@ -12,8 +12,8 @@
 \tabular{ll}{
 Package: \tab Blendstat\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
-Date: \tab 2018-07-02\cr
+Version: \tab 1.0.3\cr
+Date: \tab 2020-03-24\cr
 License: \tab GPL(>= 2)\cr
 LazyLoad: \tab yes\cr
 }
