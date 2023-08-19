@@ -1,10 +1,10 @@
 \name{Blendstat}
 
-\alias{Blendstat}
+\alias{Blendstat-package}
 
 \docType{package}
 
-\title{A R Package for Joint Analysis of Experiments with Mixtures and Random Effects.}
+\title{Joint Analysis of Experiments with Mixtures and Random Effects.}
 
 \description{Joint analysis of experiments with mixtures and random effects, taking on a process variable represented by a covariable.}
 
@@ -12,8 +12,8 @@
 \tabular{ll}{
 Package: \tab Blendstat\cr
 Type: \tab Package\cr
-Version: \tab 1.0.3\cr
-Date: \tab 2020-03-24\cr
+Version: \tab 1.0.4\cr
+Date: \tab 2023-08-19\cr
 License: \tab GPL(>= 2)\cr
 LazyLoad: \tab yes\cr
 }
