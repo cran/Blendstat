@@ -23,7 +23,7 @@
 }
 
 \references{
-Kalirajan, K. P.. On the estimation of a regression model with fixed and random coefficients. \emph{Journal of Applied Statistics}, 17(2): 237-244, 1990. doi:10.1080/757582835
+Kalirajan, K. P. On the estimation of a regression model with fixed and random coefficients. \emph{Journal of Applied Statistics}, 17(2): 237-244, 1990. doi:10.1080/757582835
 
 Swany, P. A. V. B. \emph{Statistical Inference in Random Coefficient Regression Models.} Amsterdam: Springer Science & Business Media, 1971. 209 p.
 }
